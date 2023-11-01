@@ -1,0 +1,971 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pipeline>
+  <info>
+    <name>StagingPPLB3</name>
+    <name_sync_with_filename>Y</name_sync_with_filename>
+    <description/>
+    <extended_description/>
+    <pipeline_version/>
+    <pipeline_type>Normal</pipeline_type>
+    <parameters>
+    </parameters>
+    <capture_transform_performance>N</capture_transform_performance>
+    <transform_performance_capturing_delay>1000</transform_performance_capturing_delay>
+    <transform_performance_capturing_size_limit>100</transform_performance_capturing_size_limit>
+    <created_user>-</created_user>
+    <created_date>2023/09/06 17:56:59.509</created_date>
+    <modified_user>-</modified_user>
+    <modified_date>2023/09/06 17:56:59.509</modified_date>
+  </info>
+  <notepads>
+    <notepad>
+      <backgroundcolorblue>192</backgroundcolorblue>
+      <backgroundcolorgreen>192</backgroundcolorgreen>
+      <backgroundcolorred>192</backgroundcolorred>
+      <bordercolorblue>90</bordercolorblue>
+      <bordercolorgreen>58</bordercolorgreen>
+      <bordercolorred>14</bordercolorred>
+      <fontbold>Y</fontbold>
+      <fontcolorblue>90</fontcolorblue>
+      <fontcolorgreen>58</fontcolorgreen>
+      <fontcolorred>14</fontcolorred>
+      <fontitalic>N</fontitalic>
+      <fontname>Segoe UI</fontname>
+      <fontsize>9</fontsize>
+      <height>193</height>
+      <xloc>48</xloc>
+      <yloc>48</yloc>
+      <note>*** 		STAGING - UNION ALL  -   AGREGAÇÃO DE FATURAMENTO - DIVERSOS SISTEMAS  		***
+     
+
+
+
+
+
+
+
+
+
+***</note>
+      <width>698</width>
+    </notepad>
+    <notepad>
+      <backgroundcolorblue>192</backgroundcolorblue>
+      <backgroundcolorgreen>192</backgroundcolorgreen>
+      <backgroundcolorred>192</backgroundcolorred>
+      <bordercolorblue>90</bordercolorblue>
+      <bordercolorgreen>58</bordercolorgreen>
+      <bordercolorred>14</bordercolorred>
+      <fontbold>Y</fontbold>
+      <fontcolorblue>90</fontcolorblue>
+      <fontcolorgreen>58</fontcolorgreen>
+      <fontcolorred>14</fontcolorred>
+      <fontitalic>N</fontitalic>
+      <fontname>Segoe UI</fontname>
+      <fontsize>9</fontsize>
+      <height>193</height>
+      <xloc>48</xloc>
+      <yloc>256</yloc>
+      <note>*** 		STAGING - UNION ALL  -   AGREGAÇÃO DE FATURAMENTO - DIVERSOS SISTEMAS  		***
+     
+
+
+
+
+
+
+
+
+
+***</note>
+      <width>698</width>
+    </notepad>
+  </notepads>
+  <order>
+    <hop>
+      <from>faturamento_sistemas</from>
+      <to>dts_faturamento_sistemas</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>dim_clientes_bamaq</from>
+      <to>dim_clientes_bamaq_cadunico</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <transform>
+    <name>dim_clientes_bamaq</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>STAGING</connection>
+    <execute_each_row>N</execute_each_row>
+    <limit>0</limit>
+    <sql>select
+
+    T1.doccli,
+    T1.cliente,
+    T1.uf,
+    T1.cidade,
+    T1.bairro,
+    T1.logradouro,
+    T1.numero,
+    T1.complemento,
+    T1.cep,
+    T1.email,
+    T1.tell,
+    T1.cell,
+    T1.tipofj,
+    T1.data_cadastro,
+    T1.data_ultima_atualizacao,
+	case when T1.ecgf is null then 'NAO' else T1.ecgf end as ecgf
+
+
+from
+
+(select 
+
+    T1.doccli,
+    T1.cliente,
+    T1.uf,
+    T1.cidade,
+    T1.bairro,
+    T1.logradouro,
+    T1.numero,
+    T1.complemento,
+    T1.cep,
+    T1.email,
+    T1.tell,
+    T1.cell,
+    T1.tipofj,
+    T1.data_cadastro,
+    T1.data_ultima_atualizacao,
+	T2.ecgf
+
+from 
+
+(select
+
+
+    T2.doccli,
+    T2.cliente,
+    T2.uf,
+    T2.cidade,
+    T2.bairro,
+    T2.logradouro,
+    T2.numero,
+    T2.complemento,
+    T2.cep,
+    T2.email,
+    T2.tell,
+    T2.cell,
+    T2.tipofj,
+    T2.data_cadastro,
+    T2.data_ultima_atualizacao
+
+from
+
+(select 
+
+concat(T1.doccli,'-',max(T1.row_number)) as keyref
+
+from
+(SELECT
+    T1.doccli,
+    T1.cliente,
+    T1.uf,
+    T1.cidade,
+    T1.bairro,
+    T1.logradouro,
+    T1.numero,
+    T1.complemento,
+    T1.cep,
+    T1.email,
+    T1.tell,
+    T1.cell,
+    T1.tipofj,
+    T1.data_cadastro,
+    T1.data_ultima_atualizacao,
+    (ROW_NUMBER() OVER ()) AS row_number,
+	concat(T1.doccli,'-',(ROW_NUMBER() OVER ())) as keyref
+	
+from
+
+(select distinct * from
+
+(select
+
+
+  T2.doccli
+, T2.cliente
+, T2.uf
+, T2.cidade
+, T2.bairro
+, T2.logradouro
+, T2.numero
+, T2.complemento
+, T2.cep
+, T2.email
+, T2.tell
+, T2.cell
+, T2.tipofj
+, T2.data_cadastro
+, T2.data_ultima_atualizacao
+, T2.char_length
+
+from
+
+(select 
+
+concat(T1.doccli,'-',max(T1.char_length)) as keyref
+
+from
+
+(select 
+
+  T1.doccli
+, T1.max_data_atualizacao
+, T2.cliente
+, T2.sysorigem
+, T2.codcliente
+, T2.uf
+, T2.cidade
+, T2.bairro
+, T2.logradouro
+, T2.numero
+, T2.complemento
+, T2.cep
+, T2.email
+, T2.tell
+, T2.cell
+, T2.tipofj
+, T2.data_cadastro
+, T2.data_ultima_atualizacao
+, (case when T1.doccli is null then -10 else (char_length(T1.doccli)) end)
++ (case when (T1.max_data_atualizacao::text) is null then -10 else (char_length((T1.max_data_atualizacao::text))) end)
++ (case when T2.cliente is null then -10 else (char_length(T2.cliente)) end)
++ (case when T2.sysorigem is null then -10 else (char_length(T2.sysorigem)) end)
++ (case when T2.codcliente is null then -10 else (char_length(T2.codcliente)) end)
++ (case when T2.uf is null then -100 else (char_length(T2.uf)) end)
++ (case when T2.cidade is null then -20 else (char_length(T2.cidade)) end)
++ (case when T2.bairro is null then -15 else (char_length(T2.bairro)) end)
++ (case when T2.logradouro is null then -10 else (char_length(T2.logradouro)) end)
++ CASE
+    WHEN regexp_replace(T2.numero, '[^0-9]', '', 'g') = '' OR T2.numero IS NULL THEN -100
+    ELSE char_length(regexp_replace(T2.numero, '[^0-9]', '', 'g'))
+  END
++ (case when T2.complemento is null then -10 else (char_length(T2.complemento)) end)
++ (case when T2.cep is null then -10 else (char_length(T2.cep)) end)
++ (case when T2.email is null then -10 else (char_length(T2.email)) end)
++ (case when T2.tell is null then -15 else (char_length(T2.tell)) end)
++ (case when T2.tell is null then -15 else (char_length(T2.tell)) end) --DOUBLE
++ (case when T2.cell is null then -15 else (char_length(T2.cell)) end)
++ (case when T2.tipofj is null then -10 else (char_length(T2.tipofj)) end)
+as char_length
+ 
+
+from
+
+(select 
+
+ doccli
+,max(data_ultima_atualizacao)::date as max_data_atualizacao
+,concat(doccli,'-',((max(data_ultima_atualizacao)::date)::text)) as keyref
+
+from staging.dim_clientes_bamaq
+
+group by doccli
+order by doccli)T1
+
+left join 
+
+(select 
+
+
+  concat(T1.doccli,'-',(T1.data_ultima_atualizacao)::date) as keyref
+, T1.cliente
+, T1.sysorigem
+, T1.codcliente
+, T1.uf
+, T1.cidade
+, T1.bairro
+, T1.logradouro
+, T1.numero
+, T1.complemento
+, T1.cep
+, T1.email
+, T1.tell
+, T1.cell
+, T1.tipofj
+, T1.data_cadastro::date
+, T1.data_ultima_atualizacao::date
+
+from staging.dim_clientes_bamaq T1)T2 on T1.keyref = T2.keyref
+where doccli is not null
+  and doccli not in ('00000000000','000000000000000'))T1
+
+group by doccli)T1
+-------
+
+left join
+
+(select
+
+  T1.doccli
+, T1.max_data_atualizacao
+, T1.cliente
+, T1.sysorigem
+, T1.codcliente
+, T1.uf
+, T1.cidade
+, T1.bairro
+, T1.logradouro
+, T1.numero
+, T1.complemento
+, T1.cep
+, T1.email
+, T1.tell
+, T1.cell
+, T1.tipofj
+, T1.data_cadastro
+, T1.data_ultima_atualizacao
+, T1.char_length
+, concat(T1.doccli,'-',T1.char_length) as keyref
+
+from
+(select 
+
+  T1.doccli
+, T1.max_data_atualizacao
+, T2.cliente
+, T2.sysorigem
+, T2.codcliente
+, T2.uf
+, T2.cidade
+, T2.bairro
+, T2.logradouro
+, T2.numero
+, T2.complemento
+, T2.cep
+, T2.email
+, T2.tell
+, T2.cell
+, T2.tipofj
+, T2.data_cadastro
+, T2.data_ultima_atualizacao
+, (case when T1.doccli is null then -10 else (char_length(T1.doccli)) end)
++ (case when (T1.max_data_atualizacao::text) is null then -10 else (char_length((T1.max_data_atualizacao::text))) end)
++ (case when T2.cliente is null then -10 else (char_length(T2.cliente)) end)
++ (case when T2.sysorigem is null then -10 else (char_length(T2.sysorigem)) end)
++ (case when T2.codcliente is null then -10 else (char_length(T2.codcliente)) end)
++ (case when T2.uf is null then -100 else (char_length(T2.uf)) end)
++ (case when T2.cidade is null then -20 else (char_length(T2.cidade)) end)
++ (case when T2.bairro is null then -15 else (char_length(T2.bairro)) end)
++ (case when T2.logradouro is null then -10 else (char_length(T2.logradouro)) end)
++ CASE
+    WHEN regexp_replace(T2.numero, '[^0-9]', '', 'g') = '' OR T2.numero IS NULL THEN -100
+    ELSE char_length(regexp_replace(T2.numero, '[^0-9]', '', 'g'))
+  END
++ (case when T2.complemento is null then -10 else (char_length(T2.complemento)) end)
++ (case when T2.cep is null then -10 else (char_length(T2.cep)) end)
++ (case when T2.email is null then -10 else (char_length(T2.email)) end)
++ (case when T2.tell is null then -15 else (char_length(T2.tell)) end)
++ (case when T2.tell is null then -15 else (char_length(T2.tell)) end) --DOUBLE
++ (case when T2.cell is null then -15 else (char_length(T2.cell)) end)
++ (case when T2.tipofj is null then -10 else (char_length(T2.tipofj)) end)
+as char_length
+ 
+
+from
+
+(select 
+
+ doccli
+,max(data_ultima_atualizacao)::date as max_data_atualizacao
+,concat(doccli,'-',((max(data_ultima_atualizacao)::date)::text)) as keyref
+
+from staging.dim_clientes_bamaq
+
+group by doccli
+order by doccli)T1
+
+left join 
+
+(select 
+
+
+  concat(T1.doccli,'-',(T1.data_ultima_atualizacao)::date) as keyref
+, T1.cliente
+, T1.sysorigem
+, T1.codcliente
+, T1.uf
+, T1.cidade
+, T1.bairro
+, T1.logradouro
+, T1.numero
+, T1.complemento
+, T1.cep
+, T1.email
+, T1.tell
+, T1.cell
+, T1.tipofj
+, T1.data_cadastro::date
+, T1.data_ultima_atualizacao::date
+
+from staging.dim_clientes_bamaq T1)T2 on T1.keyref = T2.keyref
+where doccli is not null
+  and doccli not in ('00000000000','000000000000000'))T1)T2 on T1.keyref = T2.keyref)T1
+
+where doccli &lt;&gt; '28400615620' --CPF DUPLICADO
+
+)T1)T1
+
+group by  T1.doccli)T1
+------
+
+
+left join
+
+
+(SELECT
+    T1.doccli,
+    T1.cliente,
+    T1.uf,
+    T1.cidade,
+    T1.bairro,
+    T1.logradouro,
+    T1.numero,
+    T1.complemento,
+    T1.cep,
+    T1.email,
+    T1.tell,
+    T1.cell,
+    T1.tipofj,
+    T1.data_cadastro,
+    T1.data_ultima_atualizacao,
+    (ROW_NUMBER() OVER ()) AS row_number,
+	concat(T1.doccli,'-',(ROW_NUMBER() OVER ())) as keyref
+	
+from
+
+(select distinct * from
+
+(select
+
+
+  T2.doccli
+, T2.cliente
+, T2.uf
+, T2.cidade
+, T2.bairro
+, T2.logradouro
+, T2.numero
+, T2.complemento
+, T2.cep
+, T2.email
+, T2.tell
+, T2.cell
+, T2.tipofj
+, T2.data_cadastro
+, T2.data_ultima_atualizacao
+, T2.char_length
+
+from
+
+(select 
+
+concat(T1.doccli,'-',max(T1.char_length)) as keyref
+
+from
+
+(select 
+
+  T1.doccli
+, T1.max_data_atualizacao
+, T2.cliente
+, T2.sysorigem
+, T2.codcliente
+, T2.uf
+, T2.cidade
+, T2.bairro
+, T2.logradouro
+, T2.numero
+, T2.complemento
+, T2.cep
+, T2.email
+, T2.tell
+, T2.cell
+, T2.tipofj
+, T2.data_cadastro
+, T2.data_ultima_atualizacao
+, (case when T1.doccli is null then -10 else (char_length(T1.doccli)) end)
++ (case when (T1.max_data_atualizacao::text) is null then -10 else (char_length((T1.max_data_atualizacao::text))) end)
++ (case when T2.cliente is null then -10 else (char_length(T2.cliente)) end)
++ (case when T2.sysorigem is null then -10 else (char_length(T2.sysorigem)) end)
++ (case when T2.codcliente is null then -10 else (char_length(T2.codcliente)) end)
++ (case when T2.uf is null then -100 else (char_length(T2.uf)) end)
++ (case when T2.cidade is null then -20 else (char_length(T2.cidade)) end)
++ (case when T2.bairro is null then -15 else (char_length(T2.bairro)) end)
++ (case when T2.logradouro is null then -10 else (char_length(T2.logradouro)) end)
++ CASE
+    WHEN regexp_replace(T2.numero, '[^0-9]', '', 'g') = '' OR T2.numero IS NULL THEN -100
+    ELSE char_length(regexp_replace(T2.numero, '[^0-9]', '', 'g'))
+  END
++ (case when T2.complemento is null then -10 else (char_length(T2.complemento)) end)
++ (case when T2.cep is null then -10 else (char_length(T2.cep)) end)
++ (case when T2.email is null then -10 else (char_length(T2.email)) end)
++ (case when T2.tell is null then -15 else (char_length(T2.tell)) end)
++ (case when T2.tell is null then -15 else (char_length(T2.tell)) end) --DOUBLE
++ (case when T2.cell is null then -15 else (char_length(T2.cell)) end)
++ (case when T2.tipofj is null then -10 else (char_length(T2.tipofj)) end)
+as char_length
+ 
+
+from
+
+(select 
+
+ doccli
+,max(data_ultima_atualizacao)::date as max_data_atualizacao
+,concat(doccli,'-',((max(data_ultima_atualizacao)::date)::text)) as keyref
+
+from staging.dim_clientes_bamaq
+
+group by doccli
+order by doccli)T1
+
+left join 
+
+(select 
+
+
+  concat(T1.doccli,'-',(T1.data_ultima_atualizacao)::date) as keyref
+, T1.cliente
+, T1.sysorigem
+, T1.codcliente
+, T1.uf
+, T1.cidade
+, T1.bairro
+, T1.logradouro
+, T1.numero
+, T1.complemento
+, T1.cep
+, T1.email
+, T1.tell
+, T1.cell
+, T1.tipofj
+, T1.data_cadastro::date
+, T1.data_ultima_atualizacao::date
+
+from staging.dim_clientes_bamaq T1)T2 on T1.keyref = T2.keyref
+where doccli is not null
+  and doccli not in ('00000000000','000000000000000'))T1
+
+group by doccli)T1
+-------
+
+left join
+
+(select
+
+  T1.doccli
+, T1.max_data_atualizacao
+, T1.cliente
+, T1.sysorigem
+, T1.codcliente
+, T1.uf
+, T1.cidade
+, T1.bairro
+, T1.logradouro
+, T1.numero
+, T1.complemento
+, T1.cep
+, T1.email
+, T1.tell
+, T1.cell
+, T1.tipofj
+, T1.data_cadastro
+, T1.data_ultima_atualizacao
+, T1.char_length
+, concat(T1.doccli,'-',T1.char_length) as keyref
+
+from
+(select 
+
+  T1.doccli
+, T1.max_data_atualizacao
+, T2.cliente
+, T2.sysorigem
+, T2.codcliente
+, T2.uf
+, T2.cidade
+, T2.bairro
+, T2.logradouro
+, T2.numero
+, T2.complemento
+, T2.cep
+, T2.email
+, T2.tell
+, T2.cell
+, T2.tipofj
+, T2.data_cadastro
+, T2.data_ultima_atualizacao
+, (case when T1.doccli is null then -10 else (char_length(T1.doccli)) end)
++ (case when (T1.max_data_atualizacao::text) is null then -10 else (char_length((T1.max_data_atualizacao::text))) end)
++ (case when T2.cliente is null then -10 else (char_length(T2.cliente)) end)
++ (case when T2.sysorigem is null then -10 else (char_length(T2.sysorigem)) end)
++ (case when T2.codcliente is null then -10 else (char_length(T2.codcliente)) end)
++ (case when T2.uf is null then -100 else (char_length(T2.uf)) end)
++ (case when T2.cidade is null then -20 else (char_length(T2.cidade)) end)
++ (case when T2.bairro is null then -15 else (char_length(T2.bairro)) end)
++ (case when T2.logradouro is null then -10 else (char_length(T2.logradouro)) end)
++ CASE
+    WHEN regexp_replace(T2.numero, '[^0-9]', '', 'g') = '' OR T2.numero IS NULL THEN -100
+    ELSE char_length(regexp_replace(T2.numero, '[^0-9]', '', 'g'))
+  END
++ (case when T2.complemento is null then -10 else (char_length(T2.complemento)) end)
++ (case when T2.cep is null then -10 else (char_length(T2.cep)) end)
++ (case when T2.email is null then -10 else (char_length(T2.email)) end)
++ (case when T2.tell is null then -15 else (char_length(T2.tell)) end)
++ (case when T2.tell is null then -15 else (char_length(T2.tell)) end) --DOUBLE
++ (case when T2.cell is null then -15 else (char_length(T2.cell)) end)
++ (case when T2.tipofj is null then -10 else (char_length(T2.tipofj)) end)
+as char_length
+ 
+
+from
+
+(select 
+
+ doccli
+,max(data_ultima_atualizacao)::date as max_data_atualizacao
+,concat(doccli,'-',((max(data_ultima_atualizacao)::date)::text)) as keyref
+
+from staging.dim_clientes_bamaq
+
+group by doccli
+order by doccli)T1
+
+left join 
+
+(select 
+
+
+  concat(T1.doccli,'-',(T1.data_ultima_atualizacao)::date) as keyref
+, T1.cliente
+, T1.sysorigem
+, T1.codcliente
+, T1.uf
+, T1.cidade
+, T1.bairro
+, T1.logradouro
+, T1.numero
+, T1.complemento
+, T1.cep
+, T1.email
+, T1.tell
+, T1.cell
+, T1.tipofj
+, T1.data_cadastro::date
+, T1.data_ultima_atualizacao::date
+
+from staging.dim_clientes_bamaq T1)T2 on T1.keyref = T2.keyref
+where doccli is not null
+  and doccli not in ('00000000000','000000000000000'))T1)T2 on T1.keyref = T2.keyref)T1
+
+where doccli &lt;&gt; '28400615620' --CPF DUPLICADO
+
+)T1)T2
+on T1.keyref = T2.keyref)T1
+
+left join
+
+(select distinct * from
+
+(select
+
+ doccli
+,ecgf
+
+from staging.dts_faturamento_sistemas
+where ecgf = 'SIM')T2)T2 on T1.doccli = T2.doccli)T1
+
+
+
+
+</sql>
+    <variables_active>N</variables_active>
+    <attributes/>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>336</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>dim_clientes_bamaq_cadunico</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <commit>1000</commit>
+    <connection>STAGING</connection>
+    <fields>
+      <field>
+        <column_name>doccli</column_name>
+        <stream_name>doccli</stream_name>
+      </field>
+      <field>
+        <column_name>cliente</column_name>
+        <stream_name>cliente</stream_name>
+      </field>
+      <field>
+        <column_name>uf</column_name>
+        <stream_name>uf</stream_name>
+      </field>
+      <field>
+        <column_name>cidade</column_name>
+        <stream_name>cidade</stream_name>
+      </field>
+      <field>
+        <column_name>bairro</column_name>
+        <stream_name>bairro</stream_name>
+      </field>
+      <field>
+        <column_name>logradouro</column_name>
+        <stream_name>logradouro</stream_name>
+      </field>
+      <field>
+        <column_name>numero</column_name>
+        <stream_name>numero</stream_name>
+      </field>
+      <field>
+        <column_name>complemento</column_name>
+        <stream_name>complemento</stream_name>
+      </field>
+      <field>
+        <column_name>cep</column_name>
+        <stream_name>cep</stream_name>
+      </field>
+      <field>
+        <column_name>email</column_name>
+        <stream_name>email</stream_name>
+      </field>
+      <field>
+        <column_name>tell</column_name>
+        <stream_name>tell</stream_name>
+      </field>
+      <field>
+        <column_name>cell</column_name>
+        <stream_name>cell</stream_name>
+      </field>
+      <field>
+        <column_name>tipofj</column_name>
+        <stream_name>tipofj</stream_name>
+      </field>
+      <field>
+        <column_name>data_cadastro</column_name>
+        <stream_name>data_cadastro</stream_name>
+      </field>
+      <field>
+        <column_name>data_ultima_atualizacao</column_name>
+        <stream_name>data_ultima_atualizacao</stream_name>
+      </field>
+      <field>
+        <column_name>ecgf</column_name>
+        <stream_name>ecgf</stream_name>
+      </field>
+    </fields>
+    <ignore_errors>N</ignore_errors>
+    <only_when_have_rows>N</only_when_have_rows>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <return_keys>N</return_keys>
+    <schema>staging</schema>
+    <specify_fields>Y</specify_fields>
+    <table>dim_clientes_bamaq_cadunico</table>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_in_table>Y</tablename_in_table>
+    <truncate>Y</truncate>
+    <use_batch>Y</use_batch>
+    <attributes/>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>336</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>dts_faturamento_sistemas</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <commit>1000</commit>
+    <connection>STAGING</connection>
+    <fields>
+      <field>
+        <column_name>keyref</column_name>
+        <stream_name>keyref</stream_name>
+      </field>
+      <field>
+        <column_name>sysorigem</column_name>
+        <stream_name>sysorigem</stream_name>
+      </field>
+      <field>
+        <column_name>codempresa</column_name>
+        <stream_name>codempresa</stream_name>
+      </field>
+      <field>
+        <column_name>doccli</column_name>
+        <stream_name>doccli</stream_name>
+      </field>
+      <field>
+        <column_name>faturamento</column_name>
+        <stream_name>faturamento</stream_name>
+      </field>
+      <field>
+        <column_name>ecgf</column_name>
+        <stream_name>ecgf</stream_name>
+      </field>
+      <field>
+        <column_name>data_fat</column_name>
+        <stream_name>data_fat</stream_name>
+      </field>
+    </fields>
+    <ignore_errors>N</ignore_errors>
+    <only_when_have_rows>N</only_when_have_rows>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <return_field/>
+    <return_keys>N</return_keys>
+    <schema>staging</schema>
+    <specify_fields>Y</specify_fields>
+    <table>dts_faturamento_sistemas</table>
+    <tablename_field/>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_in_table>Y</tablename_in_table>
+    <truncate>Y</truncate>
+    <use_batch>Y</use_batch>
+    <attributes/>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>128</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>faturamento_sistemas</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>STAGING</connection>
+    <execute_each_row>N</execute_each_row>
+    <limit>0</limit>
+    <sql> 
+
+select
+
+ T1.keyref
+,T1.sysorigem
+,T1.codempresa
+,replace(replace(replace(T1.doccli,'/',''),'-',''),'.','') as doccli
+,T1.faturamento
+,T1.ecgf
+,T1.data_fat
+
+from
+(select
+
+ concat(T1.sysorigem,'-',T1.codempresa) as keyref
+,T1.sysorigem
+,T1.codempresa
+,T1.doccli
+,T1.faturamento
+,T1.data_fat
+,case 
+ when T1.sysorigem = 'QUIVER' then 'SIM' 
+                              else 'NAO' 
+							  end as ECGF
+
+from
+
+(select 
+
+ sysorigem
+,codempresa::text
+,doccli
+,vlr_liquido_total_item as faturamento
+,data_emissao::text as data_fat
+ 
+from staging.dts_faturamento_dealer
+
+union all
+
+select 
+
+ sysorigem
+,codempresa::text
+,doccli
+,vlr_liquido_total_item as faturamento
+,data_cadastro::text as data_fat
+
+from staging.dts_faturamento_newcon
+
+union all
+
+select 
+
+ sysorigem
+,codempresa::text
+,doccli
+,premio_liquido as faturamento
+,data_emissao::text as data_fat
+
+from staging.dts_faturamento_quiver
+
+union all
+
+select 
+
+ sysorigem
+,cod_empresa::text codempresa
+,doccli
+,total_nota as faturamento
+,data_nf::text as data_fat
+
+from staging.dts_faturamento_nbs)t1)t1
+</sql>
+    <variables_active>N</variables_active>
+    <attributes/>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>128</yloc>
+    </GUI>
+  </transform>
+  <transform_error_handling>
+  </transform_error_handling>
+  <attributes/>
+</pipeline>

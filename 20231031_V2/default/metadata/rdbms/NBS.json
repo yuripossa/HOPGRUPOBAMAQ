@@ -1,0 +1,26 @@
+{
+  "rdbms": {
+    "ORACLE": {
+      "databaseName": "(DESCRIPTION \u003d(ADDRESS \u003d (PROTOCOL \u003d TCP)(HOST \u003d 10.12.72.10)(PORT \u003d 1521))(CONNECT_DATA \u003d(SERVICE_NAME \u003d nbs.privatesubnet.natvcn.oraclevcn.com)))",
+      "pluginId": "ORACLE",
+      "accessType": 0,
+      "hostname": "",
+      "password": "Encrypted 2be98afc86aa795ddb941be27dcc4be8f",
+      "pluginName": "Oracle",
+      "port": "-1",
+      "attributes": {
+        "SUPPORTS_TIMESTAMP_DATA_TYPE": "N",
+        "QUOTE_ALL_FIELDS": "N",
+        "SUPPORTS_BOOLEAN_DATA_TYPE": "N",
+        "FORCE_IDENTIFIERS_TO_LOWERCASE": "N",
+        "PRESERVE_RESERVED_WORD_CASE": "Y",
+        "SQL_CONNECT": "",
+        "FORCE_IDENTIFIERS_TO_UPPERCASE": "N",
+        "PREFERRED_SCHEMA_NAME": ""
+      },
+      "manualUrl": "",
+      "username": "NBS"
+    }
+  },
+  "name": "NBS"
+}
